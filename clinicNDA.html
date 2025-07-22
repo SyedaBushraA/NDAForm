@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NDA Form by Clinic</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #003366;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    nav {
+      background-color: #002244;
+      padding: 0.5rem;
+      text-align: center;
+    }
+
+    nav a {
+      color: white;
+      margin: 0 1rem;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    main {
+      padding: 1rem;
+    }
+
+    form {
+      background: #f9f9f9;
+      padding: 1rem;
+      margin-top: 1rem;
+      border: 1px solid #ccc;
+      max-width: 600px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 1rem;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 0.5rem;
+      margin-top: 0.25rem;
+    }
+
+    button {
+      background-color: #003366;
+      color: white;
+      padding: 0.5rem 1rem;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0055aa;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1 id="clinicHeader">Non‑Disclosure Agreement Form</h1>
+  </header>
+
+  <nav>
+    <a href="#nda">NDA Form</a>
+    <a href="#policies">Policies</a>
+    <a href="#agreements">Agreements</a>
+  </nav>
+
+  <main>
+    <label for="clinicSelect"><strong>Select Clinic:</strong></label>
+    <select id="clinicSelect">
+      <option>Select a clinic</option>
+    </select>
+
+    <form id="ndaForm">
+      <h2>NDA Form</h2>
+      <label>First Name: <input type="text" id="firstName" required /></label>
+      <label>Last Name: <input type="text" id="lastName" required /></label>
+      <label>Email: <input type="email" id="email" required /></label>
+      <label>Phone: <input type="tel" id="phone" required /></label>
+      <label>Agreement: <textarea id="agreement" rows="5" required></textarea></label>
+      <button type="submit">Submit</button>
+    </form>
+  </main>
+
+  <script>
+    const sheetURL = "https://opensheet.elk.sh/🟩YOUR_SHEET_ID🟩/🟩Sheet1🟩";
+
+    const clinicSelect = document.getElementById("clinicSelect");
+    const clinicHeader = document.getElementById("clinicHeader");
+
+    const firstName = document.getElementById("firstName");
+    const lastName = document.getElementById("lastName");
+    const email = document.getElementById("email");
+    const phone = document.getElementById("phone");
+    const agreement = document.getElementById("agreement");
+
+    let clinicData = [];
+
+    fetch(sheetURL)
+      .then(res => res.json())
+      .then(data => {
+        clinicData = data;
+        const uniqueClinics = [...new Set(data.map(row => row["Clinic Name"]))];
+        uniqueClinics.forEach(clinic => {
+          const opt = document.createElement("option");
+          opt.value = clinic;
+          opt.textContent = clinic;
+          clinicSelect.appendChild(opt);
+        });
+      });
+
+    clinicSelect.addEventListener("change", () => {
+      const selectedClinic = clinicSelect.value;
+      clinicHeader.textContent = `${selectedClinic} - NDA Form`;
+
+      const formData = clinicData.find(row => row["Clinic Name"] === selectedClinic);
+
+      if (formData) {
+        firstName.value = formData["First Name"] || '';
+        lastName.value = formData["Last Name"] || '';
+        email.value = formData["Email"] || '';
+        phone.value = formData["Phone"] || '';
+        agreement.value = formData["Agreement Terms"] || '';
+      }
+    });
+
+    document.getElementById("ndaForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+      alert("Form submitted for: " + clinicSelect.value);
+    });
+  </script>
+</body>
+</html>

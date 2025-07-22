@@ -22,6 +22,15 @@
       top: 0;
       z-index: 1000;
     }
+    .clinic-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: white;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+
     .nav {
       max-width: 1200px;
       margin: auto;
@@ -142,15 +151,22 @@
 </head>
 <body>
 
-
+    <header>
+        <div class="nav">
+          <div style="display: flex; align-items: center; gap: 15px;">
+            <img src="https://dentalpracticetransitions.henryschein.com/wp-content/uploads/2021/10/HSDPT_logo.svg" alt="Clinic Logo" style="height: 50px;" />
+            <div class="clinic-title">Dentist in Vernon Hills</div>
+          </div>
+        </div>
+      </header>
+      
 
 <main>
   <h1>Non‑Disclosure Agreement Form</h1>
   <p>Please read the following Confidentiality Agreement. By completing the form below and clicking "Agree and Submit", you agree to the terms and conditions of the Confidentiality Agreement.</p>
 
   <div class="nda-text">
-    This CONFIDENTIALITY AGREEMENT ("Agreement") is entered into as of the date of submission set forth below ("Submission Date"), by and between the undersigned (the "Receiving Party") and the Henry Schein Dental Practice Transitions entity set forth immediately below ("HSDPT")...
-  </div>
+    This CONFIDENTIALITY AGREEMENT ("Agreement") is entered into as of the date of submission set forth below ("Submission Date"), by and between the undersigned (the "Receiving Party") and the Dentist in Vernon Hills entity set forth immediately below
 
   <form id="ndaForm">
     <div class="form-group">
@@ -263,6 +279,8 @@ document.getElementById('ndaForm').addEventListener('submit', async function(e) 
   const signature = canvas.toDataURL();
 
   const formData = {
+    clinic: "Dentist in Vernon Hills", // Change this for each file
+
     firstName: document.getElementById('firstName').value.trim(),
     lastName: document.getElementById('lastName').value.trim(),
     email: document.getElementById('email').value.trim(),
@@ -282,12 +300,24 @@ document.getElementById('ndaForm').addEventListener('submit', async function(e) 
   }
 
   try {
-    await fetch('https://script.google.com/macros/s/AKfycbyzwRFIJ2xZey31PUT-bo1KzlW_5wCaShUDP9TdZYQdD1KKJQ9McCKggS_T_iCpAXRE/exec', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(formData),
-      mode: 'no-cors'
-    });
+    await fetch('https://script.google.com/macros/s/AKfycby-fO7D6apcjKZ4ZI_VEOOKoAddThdzGMww6W5hflRWB7usT2RA3OEoNDSCiFGTQZyT2Q/exec', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    clinic: "Dentist in Vernon Hills", // Unique per file
+    firstName,
+    lastName,
+    email,
+    phone,
+    zip,
+    city,
+    state,
+    agree,
+    signature,
+    timestamp: new Date().toISOString()
+  }),
+});
+
 
     document.getElementById('ndaForm').style.display = 'none';
     document.getElementById('confirmation').style.display = 'block';
